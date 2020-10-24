@@ -16,24 +16,27 @@ class BaseOptions():
         It also implements several helper functions such as parsing, printing, and saving the options.
         It also gathers additional options defined in <modify_commandline_options> functions in both dataset class and model class.
         """
-        parser.add_argument('--dataroot', required=True, help='path to images (should have subfolders trainA, trainB, valA, valB, etc)')
+        #required参数为True，代表不可省略，所以运行时候需要输入文件目录,如果不想輸入就去掉
+        # parser.add_argument('--dataroot', required=True, help='path to images (should have subfolders trainA, trainB, valA, valB, etc)')
+        parser.add_argument('--dataroot',  type=str, default='./datasets/edges2shoes' ,help='path to images (should have subfolders trainA, trainB, valA, valB, etc)')
         parser.add_argument('--batch_size', type=int, default=2, help='input batch size')
-        parser.add_argument('--load_size', type=int, default=286, help='scale images to this size')
+        parser.add_argument('--load_size', type=int, default=256, help='scale images to this size')
         parser.add_argument('--crop_size', type=int, default=256, help='then crop to this size')
-        parser.add_argument('--input_nc', type=int, default=3, help='# of input image channels')
+        parser.add_argument('--input_nc', type=int, default=1, help='# of input image channels')
         parser.add_argument('--output_nc', type=int, default=3, help='# of output image channels')
         parser.add_argument('--nz', type=int, default=8, help='#latent vector')
         parser.add_argument('--gpu_ids', type=str, default='0', help='gpu ids: e.g. 0  0,1,2, 0,2, -1 for CPU mode')
-        parser.add_argument('--name', type=str, default='', help='name of the experiment. It decides where to store samples and models')
+        parser.add_argument('--name', type=str, default='edges2shoes_bicycle_gan', help='name of the experiment. It decides where to store samples and models')
         parser.add_argument('--preprocess', type=str, default='resize_and_crop', help='not implemented')
         parser.add_argument('--dataset_mode', type=str, default='aligned', help='aligned,single')
         parser.add_argument('--model', type=str, default='bicycle_gan', help='chooses which model to use. bicycle,, ...')
         parser.add_argument('--direction', type=str, default='AtoB', help='AtoB or BtoA')
         parser.add_argument('--epoch', type=str, default='latest', help='which epoch to load? set to latest to use latest cached model')
         parser.add_argument('--num_threads', default=4, type=int, help='# sthreads for loading data')
-        parser.add_argument('--checkpoints_dir', type=str, default='./checkpoints', help='models are saved here')
+        parser.add_argument('--checkpoints_dir', type=str, default='../checkpoints/edges2shoes/', help='models are saved here')
         parser.add_argument('--serial_batches', action='store_true', help='if true, takes images in order to make batches, otherwise takes them randomly')
-        parser.add_argument('--use_dropout', action='store_true', help='use dropout for the generator')
+        #只要运行时该变量有传参就将该变量设为True
+        parser.add_argument('--use_dropout', default='true',action='store_true', help='use dropout for the generator')
         parser.add_argument('--max_dataset_size', type=int, default=float("inf"), help='Maximum number of samples allowed per dataset. If the dataset directory contains more than max_dataset_size, only a subset is loaded.')
         parser.add_argument('--no_flip', action='store_true', help='if specified, do not flip the images for data argumentation')
 

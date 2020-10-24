@@ -26,6 +26,7 @@ def find_model_using_name(model_name):
     and it is case-insensitive.
     """
     model_filename = "models." + model_name + "_model"
+    #模型库
     modellib = importlib.import_module(model_filename)
     model = None
     target_model_name = model_name.replace('_', '') + 'model'
@@ -36,6 +37,7 @@ def find_model_using_name(model_name):
 
     if model is None:
         print("In %s.py, there should be a subclass of BaseModel with class name that matches %s in lowercase." % (model_filename, target_model_name))
+        #exit(0)是正常退出,就是你认为代码一切正常的时候的退出 ，exit(1)是异常退出,比如你的代码在出现不应该出现的分枝,要求终止程序的时候就用exit(1)
         exit(0)
 
     return model

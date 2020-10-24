@@ -4,13 +4,14 @@ from . import networks
 
 
 class BiCycleGANModel(BaseModel):
+    # 静态方法无需实例化 也可以实例化后调用
     @staticmethod
     def modify_commandline_options(parser, is_train=True):
         return parser
 
     def __init__(self, opt):
         if opt.isTrain:
-            assert opt.batch_size % 2 == 0  # load two images at one time.
+            assert opt.batch_size % 2 == 0  # load two images at one time. 如果为false 触发Traceback (most recent call last):File "<stdin>", line 1, in <module> AssertionError
 
         BaseModel.__init__(self, opt)
         # specify the training losses you want to print out. The program will call base_model.get_current_losses

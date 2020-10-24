@@ -92,6 +92,7 @@ def get_norm_layer(norm_type='instance'):
     For BatchNorm, we use learnable affine parameters and track running statistics (mean/stddev).
     For InstanceNorm, we do not use learnable affine parameters. We do not track running statistics.
     """
+    #functools.partial用于部分应用一个函数，它基于一个函数创建一个可调用对象，把原函数的某些参数固定，调用时只需要传递未固定的参数即可，函数化编程思想
     if norm_type == 'batch':
         norm_layer = functools.partial(nn.BatchNorm2d, affine=True, track_running_stats=True)
     elif norm_type == 'instance':
@@ -656,7 +657,9 @@ class E_ResNet(nn.Module):
 # Defines the Unet generator.
 # |num_downs|: number of downsamplings in UNet. For example,
 # if |num_downs| == 7, image of size 128x128 will become of size 1x1
-# at the bottleneck
+# at the bottleneck    
+#instanceNorm在图像像素上，对HW做归一化，用在风格化迁移   batchNorm是在batch上，对NHW做归一化，对小batchsize效果不好；
+#https://blog.csdn.net/liuxiao214/article/details/81037416
 class G_Unet_add_all(nn.Module):
     def __init__(self, input_nc, output_nc, nz, num_downs, ngf=64,
                  norm_layer=None, nl_layer=None, use_dropout=False, upsample='basic'):
@@ -690,11 +693,11 @@ class UnetBlock_with_z(nn.Module):
                  norm_layer=None, nl_layer=None, use_dropout=False, upsample='basic', padding_type='zero'):
         super(UnetBlock_with_z, self).__init__()
         p = 0
-        downconv = []
-        if padding_type == 'reflect':
+        downconv = [] #用于包裹所有子层
+        if padding_type == 'reflect': #使用输入边界的反射来填充输入tensor，上采样的方式
             downconv += [nn.ReflectionPad2d(1)]
         elif padding_type == 'replicate':
-            downconv += [nn.ReplicationPad2d(1)]
+            downconv += [nn.ReplicationPad2d(1)] #使用输入边界的复制值来填充输入tensor
         elif padding_type == 'zero':
             p = 1
         else:
@@ -706,10 +709,10 @@ class UnetBlock_with_z(nn.Module):
         self.nz = nz
         input_nc = input_nc + nz
         downconv += [nn.Conv2d(input_nc, inner_nc,
-                               kernel_size=4, stride=2, padding=p)]
+                               kernel_size=4, stride=2, padding=p)] #实现卷积
         # downsample is different from upsample
-        downrelu = nn.LeakyReLU(0.2, True)
-        uprelu = nl_layer()
+        downrelu = nn.LeakyReLU(0.2, True) #conv+relu（水平）+pooling（往下）+upconv（往上）
+        uprelu = nl_layer() #relu
 
         if outermost:
             upconv = upsampleLayer(
@@ -736,9 +739,9 @@ class UnetBlock_with_z(nn.Module):
 
             if use_dropout:
                 up += [nn.Dropout(0.5)]
-        self.down = nn.Sequential(*down)
-        self.submodule = submodule
-        self.up = nn.Sequential(*up)
+        self.down = nn.Sequential(*down) #下的部分进行拼接
+        self.submodule = submodule#用于叠加各层的接口
+        self.up = nn.Sequential(*up) #再上
 
     def forward(self, x, z):
         # print(x.size())

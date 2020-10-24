@@ -18,8 +18,8 @@ class TrainOptions(BaseOptions):
         parser.add_argument('--no_html', action='store_true', help='do not save intermediate training results to [opt.checkpoints_dir]/[opt.name]/web/')
         parser.add_argument('--gan_mode', type=str, default='lsgan', help='the type of GAN objective. [vanilla | lsgan ｜ wgangp]. vanilla GAN loss is the cross-entropy objective used in the original GAN paper.')
         # training parameters
-        parser.add_argument('--niter', type=int, default=100, help='# of iter at starting learning rate')
-        parser.add_argument('--niter_decay', type=int, default=100, help='# of iter to linearly decay learning rate to zero')
+        parser.add_argument('--niter', type=int, default=30, help='# of iter at starting learning rate')
+        parser.add_argument('--niter_decay', type=int, default=30, help='# of iter to linearly decay learning rate to zero')
         parser.add_argument('--continue_train', action='store_true', help='continue training: load the latest model')
         parser.add_argument('--epoch_count', type=int, default=1, help='the starting epoch count, we save the model by <epoch_count>, <epoch_count>+<save_latest_freq>, ...')
         parser.add_argument('--lr', type=float, default=0.0002, help='initial learning rate for adam')

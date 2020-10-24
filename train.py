@@ -12,6 +12,7 @@ Example:
         python train.py --dataroot ./datasets/facades --name facades_pix2pix --model pix2pix --direction BtoA
 See options/base_options.py and options/train_options.py for more training options.
 """
+#BicycleGAN 是pix2pixGan的升级版，不是Cyclegan的升级版。还是需要pair输入去训练的。
 import time
 from options.train_options import TrainOptions
 from data import create_dataset

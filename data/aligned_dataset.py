@@ -42,6 +42,7 @@ class AlignedDataset(BaseDataset):
         # split AB image into A and B
         w, h = AB.size
         w2 = int(w / 2)
+        #Image.crop(left, up, right, below)，切割一张图，上下左右有间距
         A = AB.crop((0, 0, w2, h))
         B = AB.crop((w2, 0, w, h))
 
